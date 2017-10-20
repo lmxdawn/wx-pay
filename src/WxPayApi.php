@@ -42,8 +42,6 @@ class WxPayApi
 			throw new WxPayException("统一支付接口中，缺少必填参数product_id！trade_type为JSAPI时，product_id为必填参数！");
 		}
 
-
-		
 		//异步通知url未设置，则使用配置文件中的url
 		if(!$inputObj->IsNotify_urlSet()){
 			$inputObj->SetNotify_url(WxPayConfig::NOTIFY_URL);//异步通知url
