@@ -1,0 +1,26 @@
+{
+    "name": "lmxdawn/pay",
+    "type": "library",
+    "description": "wx-pay package for thinkphp5.0",
+    "keywords": ["wx-pay"],
+    "homepage": "https://github.com/lmxdawn/wx-pay",
+    "license": "Apache-2.0",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Lan Ming Xiang",
+            "email": "lmxdawn@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/lmxdawn/wx-pay/issues"
+    },
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "lmxdawn\\wxpay\\": "src/"
+        }
+    }
+}
