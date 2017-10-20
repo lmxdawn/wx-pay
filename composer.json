@@ -1,5 +1,5 @@
 {
-    "name": "lmxdawn/pay",
+    "name": "lmxdawn/wx-pay",
     "type": "library",
     "description": "wx-pay package for thinkphp5.0",
     "keywords": ["wx-pay"],
