@@ -63,6 +63,57 @@ class WxPayApi
 		
 		return $result;
 	}
+
+
+    /**
+     * @param WxPayTransfers $inputObj
+     * @param int $timeOut
+     * @return array
+     * @throws WxPayException
+     */
+    public static function transfers($inputObj, $timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
+        //检测必填参数
+        if(!$inputObj->IsPartner_trade_noSet()) {
+            throw new WxPayException("缺少企业付款接口必填参数 partner_trade_no！");
+        }else if(!$inputObj->IsOpenidSet()){
+            throw new WxPayException("缺少企业付款接口必填参数 openid！");
+        }else if(!$inputObj->IsAmountSet()){
+            throw new WxPayException("缺少企业付款接口必填参数 amount！");
+        }else if(!$inputObj->IsDescSet()){
+            throw new WxPayException("缺少企业付款接口必填参数 desc！");
+        }
+
+        // 校验用户姓名选项未设置，则使用不验证
+        if(!$inputObj->IsCheck_nameSet()){
+            $inputObj->SetCheck_name('NO_CHECK');// 校验用户姓名选项
+        }
+
+        // 校验用户姓名选项为 FORCE_CHECK ，则 收款用户姓名 必选
+        if($inputObj->GetCheck_name() == 'FORCE_CHECK' && !$inputObj->IsRe_user_nameSet()){
+            throw new WxPayException("缺少企业付款接口必填参数 re_user_name！");
+        }
+
+        $inputObj->SetMch_appid(WxPayConfig::APPID);//公众账号ID
+        $inputObj->SetMchid(WxPayConfig::MCHID);//商户号
+        $inputObj->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip
+        //$inputObj->SetSpbill_create_ip("1.1.1.1");
+        $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
+
+        //签名
+        $inputObj->SetSign();
+        $xml = $inputObj->ToXml();
+        $startTimeStamp = self::getMillisecond();//请求开始时间
+        $response = self::postXmlCurl($xml, $url, true, $timeOut);
+        //将XML转为array
+        //禁止引用外部xml实体
+        libxml_disable_entity_loader(true);
+        $result = json_decode(json_encode(simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        self::reportCostTime($url, $startTimeStamp, $result);//上报请求花费时间
+
+        return $result;
+    }
 	
 	/**
 	 * 
@@ -419,8 +470,8 @@ class WxPayApi
 			$msg = $e->errorMessage();
 			return false;
 		}
-
-        return $result;
+		
+		return $result;
 	}
 	
 	/**
