@@ -476,5 +476,31 @@ class WxPayUnifiedOrder extends WxPayDataBase
     {
         return array_key_exists('openid', $this->values);
     }
+    
+    // 指定不能信用卡支付
+    /**
+     * 设置limit_pay=no_credit，上传此参数no_credit--可限制用户不能使用信用卡支付
+     * @param string $value
+     **/
+    public function SetLimit_pay($value)
+    {
+        $this->values['limit_pay'] = $value;
+    }
+    /**
+     * 获取limit_pay=no_credit，上传此参数no_credit--可限制用户不能使用信用卡支付 的值
+     * @return 值
+     **/
+    public function GetLimit_pay()
+    {
+        return $this->values['limit_pay'];
+    }
+    /**
+     * 判断limit_pay=no_credit，上传此参数no_credit--可限制用户不能使用信用卡支付 是否存在
+     * @return true 或 false
+     **/
+    public function IsLimit_paySet()
+    {
+        return array_key_exists('limit_pay', $this->values);
+    }
 }
 
